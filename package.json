@@ -1,0 +1,37 @@
+{
+  "name": "project2-badgerapp",
+  "version": "1.0.0",
+  "description": "Badger Dating App",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacobmink/project2-badgerapp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jacobmink/project2-badgerapp/issues"
+  },
+  "homepage": "https://github.com/jacobmink/project2-badgerapp#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "connect-mongodb-session": "^2.0.7",
+    "dotenv": "^6.2.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "faker": "^4.1.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.4.7",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.18.9",
+    "paginate": "^0.2.0",
+    "query-string": "^6.2.0"
+  },
+  "devDependencies": {}
+}

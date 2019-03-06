@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/headmeta %>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Swipe City</title>
+</head>
+<body>
+    <header>
+        <% include ../partials/header %>
+    </header>
+    <main>
+        <button class="filter-button">Filters</button>
+        <section class="filters">
+            
+            <form action="/users" class="filter-form">
+                <div>
+                    <h3>Gender:</h3>
+                    <input type="checkbox" name="gender" value="Male"> Male<br>
+                    <input type="checkbox" name="gender" value="Female"> Female<br>
+                    <input type="checkbox" name="gender" value="Other"> Other<br>
+                </div>
+                
+                <div>
+                    <h3>Age: </h3>
+                    <select name="minAge">
+                        <% for(let i = 18; i < 100; i++) { %>
+                            <option value="<%=i%>"><%=i%></option>
+                        <% } %>
+                    </select>
+                    <small>-</small>
+                    <select name="maxAge">
+                        <% for(let i = 18; i < 100; i++) { %>
+                            <option value="<%=i%>"><%= i %></option>
+                        <% } %>
+                    </select>
+                </div>
+                
+                <div>
+                    <h3>Badges</h3>
+                    <% for(let i = 0; i < badges.length; i++) { %>
+                        <input type="checkbox" name="badgesWanted" value="<%=badges[i]%>"><%=badges[i]%><br>
+                    <% } %>
+                </div><br>
+                
+                <button type="submit">Submit</button>
+            </form>
+
+        </section>
+        
+
+        <section>
+            <ul>
+                <% users.forEach((otherUser)=>{ %>
+                    <% if(otherUser !== user) %>
+                    <li><a href="/users/<%= otherUser._id %>"><%= otherUser.displayName %></a> <br>
+                        <%= otherUser.gender %> <br>
+                        Age: <%= otherUser.age %> <br>
+                        Badges: <% otherUser.badgeList.forEach((badge)=>{ %>
+                        <%= badge.title %>
+                    <% }) %><br>
+                    <img src="<%= otherUser.img %>">
+                    </li>
+    
+                <% }) %>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <% include ../partials/footer %>
+    </footer>   
+    <script src="/js/filtertoggle.js"></script>
+</body>
+</html>

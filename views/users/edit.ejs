@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/headmeta %>
+    <title>Edit user profile</title>
+</head>
+<body>
+    <header>
+        <% include ../partials/header %>
+    </header>
+    <main>
+        <h1>Edit User Profile</h1>
+        <section class="main-form">
+            <form action="/users/<%= user._id %>?_method=PUT" method="POST">
+                Username: <input type="text" name="username" value="<%= user.username %>"><br/>
+                Password: <input type="password" name="password" value="<%= user.password %>"><br/>
+                Email: <input type="email" name="email" value="<%= user.email %>"><br>
+
+                Gender: <select name="gender">
+                        <% for(let i = 0; i < genderList.length; i++){ %>
+                            <option value="<%= genderList[i] %>"><%= genderList[i] %></option>
+                        <% } %>
+                        </select><br>
+
+                Age: <input type="text" name="age" value="<%= user.age %>"><br>
+                Display Name: <input type="text" name="displayName" value="<%= user.displayName %>"><br>
+                About: <textarea name="about"><%= user.about %></textarea><br>
+                Photo: <input type="text" name="img" value="<%= user.img %>"><br>
+                <button type="submit">Update Profile</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <% include ../partials/footer %>
+    </footer>   
+    
+</body>
+</html>

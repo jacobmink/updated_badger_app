@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <% include ../partials/headmeta %>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      
+
+    
+    <title>Login</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="/"><button>Back To Home</button></a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1>Login To Your Profile</h1>
+      <div class="error-window"></div>
+      <form action="/auths/login" method="POST" id="loginform">
+        <input type="text" name="username" placeholder="username"><br/>
+        <input type="password" name="password" placeholder="password"><br/>
+        <button type="submit">Login</button>
+      </form>
+    </main>
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+    <script src="/js/loginvalidators"></script>
+  </body>
+</html>
