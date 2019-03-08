@@ -51,13 +51,19 @@ router.route('/')
                 const allUsers = await User.find({
                     'username': {$ne: req.session.username}
                 });
-                res.render('users/index.ejs', {
-                    users: allUsers,
-                    user: loggedIn,
-                    genderList: genderList,
-                    badges: badgeTitles,
-                    sessionId: req.session.userId
+                const parsed = await allUsers.json();
+                console.log(parsed, ' parsed users');
+                res.json({
+                    status: 200,
+                    data: parsed
                 })
+                // res.render('users/index.ejs', {
+                //     users: allUsers,
+                //     user: loggedIn,
+                //     genderList: genderList,
+                //     badges: badgeTitles,
+                //     sessionId: req.session.userId
+                // })
             }else{
                 let filteredUsers = await User.find({'username': {$ne: req.session.username}});
                 // filter by age

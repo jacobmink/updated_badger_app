@@ -1,0 +1,56 @@
+body{
+  background: url('/transparentbadgerbg.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
+}
+
+h1{
+  color: rgb(240, 99, 34);
+  text-shadow: 3px 2px black;
+}
+
+.App {
+  text-align: center;
+}
+
+.book-container ul{
+  list-style-type: none;
+  border: 2px solid lightgrey;
+}
+
+.book-container li{
+  display: inline-block;
+  margin: 3px;
+}
+
+.liked-books{
+  display: inline-block;
+}
+
+.liked-books li{
+  list-style-type: none;
+  display: block;
+}
+
+.header{
+  border-bottom: 2px solid grey;
+}
+
+.header li{
+  display: inline-block;
+  margin: 3px;
+}
+
+a{
+  text-decoration: none;
+}
+
+button{
+  border-radius: 5px;
+  font-size: 1em;
+  height: 30px;
+  background: blue;
+  color: white;
+}
