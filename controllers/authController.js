@@ -11,13 +11,6 @@ for(let i = 18; i < 100; i++){
 
 // login // signin
 router.route('/login')
-    // .get(async (req,res)=>{
-    //     try{
-    //         res.render('auths/login.ejs');
-    //     }catch(err){
-    //         res.send(err);
-    //     }
-    // })
     .post(async(req, res) => {
         try {
             const foundUser = await User.findOne({'username': req.body.username});
@@ -27,23 +20,19 @@ router.route('/login')
                     req.session.userId = foundUser._id;
                     req.session.username = foundUser.username;
                     req.session.logged = true;
-                    // res.redirect(`/users/${foundUser._id}`);
+                    console.log(req.session, ' req.session')
                     res.json({
                         status: 200,
                         data: 'login successful',
                         info: foundUser
                     })
                 }else{
-                    // req.session.message = 'INVALID USERNAME OR PASSWORD';
-                    // res.redirect('/');
                     res.json({
                         status: 200,
                         data: 'Incorrect username or password'
                     })
                 }
             }else{
-                // req.session.message = 'INVALID USERNAME OR PASSWORD';
-                // res.redirect('/');
                 res.json({
                     status: 200,
                     data: 'User not found'

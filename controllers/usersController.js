@@ -143,10 +143,10 @@ router.route('/:id')
     .get(async (req,res)=>{
         try{
             const foundUser = await User.findById(req.params.id);
-            res.render('users/show.ejs', {
-                user: foundUser,
-                sessionId: req.session.userId
-            });
+            res.json({
+                status: 200,
+                data: foundUser
+            })
         }catch(err){
             res.send(err);
         }
@@ -181,8 +181,11 @@ router.route('/:id')
     // update profile
     .put(async (req,res)=>{
         try{
-            await User.findByIdAndUpdate(req.params.id, req.body);
-            res.redirect(`/users/${req.params.id}`);
+            const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true});
+            res.json({
+                status: 200,
+                data: updatedUser
+            })
         }catch(err){
             res.send(err);
         }
@@ -202,22 +205,22 @@ router.route('/:id')
     })
 
 // edit user profile
-router.route('/:id/edit')
-    .get(async (req,res)=>{
-        if(req.session.userId == req.params.id){
-            try{
-                const foundUser = await User.findById(req.params.id);
-                res.render('users/edit.ejs', {
-                    user: foundUser,
-                    genderList: genderList,
-                    sessionId: req.session.userId
-                });
-            }catch(err){
-                res.send(err);
-            }
-        }else{
-            res.send('AH AH AH YOU DIDNT SAY THE MAGIC WORD');
-        }
-    })
+// router.route('/:id/edit')
+//     .get(async (req,res)=>{
+//         if(req.session.userId == req.params.id){
+//             try{
+//                 const foundUser = await User.findById(req.params.id);
+//                 res.render('users/edit.ejs', {
+//                     user: foundUser,
+//                     genderList: genderList,
+//                     sessionId: req.session.userId
+//                 });
+//             }catch(err){
+//                 res.send(err);
+//             }
+//         }else{
+//             res.send('AH AH AH YOU DIDNT SAY THE MAGIC WORD');
+//         }
+//     })
 
 module.exports = router;
