@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import EditUser from '../EditUser/EditUser';
 
 class Profile extends Component{
@@ -22,7 +22,6 @@ class Profile extends Component{
                 throw Error(foundUser.statusText);
             }
             const parsed = await foundUser.json();
-            console.log(parsed, ' foundUser');
             this.setState({
                 userData: parsed
             })
@@ -116,12 +115,22 @@ class Profile extends Component{
         // const editAndDelete = this.state.user._id.toString() === sessionId.toString() ? <a href=`/users/${ this.state.user._id }/edit`><button>Edit profile</button></a>
         //     <form onSubmit={this.deleteUser.bind(null, this.state.user._id)}><button>Delete this account</button>
         //     </form> : null;
-        // for(let i = 0; i < user.badgeList.length; i++) { 
-        //     <li><a href="/users/{ user._id }/badges/{user.badgeList[i]._id}">{user.badgeList[i].title}</a></li>
-        // }
-            
-        
 
+        const badgeListRender = this.state.user.badgeList.length === 0 ? "This user has no badges yet" : this.state.user.badgeList.map((badge)=>{
+            console.log(badge);
+            return (
+                
+                <li>
+                    {badge._id} <br/>
+                    <Link to={{
+                    pathname: `/users/${this.state.user._id}/badges/${badge._id}`,
+                    state: {
+                        user: this.state.user,
+                        badge: badge
+                    }
+                }}>{badge.title}</Link></li>
+            )
+        })
         return(
             <div>
                 <h2>{this.state.user.displayName}'s Profile</h2>
@@ -135,11 +144,12 @@ class Profile extends Component{
                 <button onClick={this.showModal} >Edit Profile</button> <br/>
                 {this.state.message} <br/>
                 {this.state.showModal ? <EditUser editUser={this.editUser} user={this.state.user}/> : null}
-                <button onClick={this.deleteUser.bind(null, this.state.user._id)} >Delete your Account</button>
+                <button onClick={this.deleteUser.bind(null, this.state.user._id)} >Delete your Account</button> <br/>
 
                 Badges:
+                    {badgeListRender}
                 
-                <a href="/users/{ user._id }/badges/new"><button>Add Badge</button></a>
+                <Link to="/newbadge"><button>Add Badge</button></Link>
             </div>
         )
     }

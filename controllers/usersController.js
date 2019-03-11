@@ -156,23 +156,16 @@ router.route('/:id')
         console.log(req.body)
         try{
             const foundUser = await User.findById(req.params.id);
-            const eventsList = await Promise.all([
-                EventModel.create({
-                    img: req.body.img1,
-                    description: req.body.description1}),
-                EventModel.create({
-                    img: req.body.img2,
-                    description: req.body.description2}),
-                EventModel.create({
-                    img: req.body.img3,
-                    description: req.body.description3})]);
             const newBadge = await Badge.create({
                 title: req.body.title,
-                events: eventsList
+                events: req.body.events
             });
             foundUser.badgeList.push(newBadge);
             await foundUser.save();
-            res.redirect(`/users/${req.params.id}`);
+            res.json({
+                status: 200,
+                data: foundUser
+            });
         }catch(err){
             console.log(err);
             res.send(err);
@@ -195,7 +188,10 @@ router.route('/:id')
         if(req.session.userId === req.params.id){
             try{
                 await User.findByIdAndDelete(req.params.id);
-                res.redirect('/');
+                res.json({
+                    status: 200,
+                    data: 'Successfully deleted user'
+                })
             }catch(err){
                 res.send(err);
             }
@@ -204,23 +200,36 @@ router.route('/:id')
         }
     })
 
-// edit user profile
-// router.route('/:id/edit')
-//     .get(async (req,res)=>{
-//         if(req.session.userId == req.params.id){
-//             try{
-//                 const foundUser = await User.findById(req.params.id);
-//                 res.render('users/edit.ejs', {
-//                     user: foundUser,
-//                     genderList: genderList,
-//                     sessionId: req.session.userId
-//                 });
-//             }catch(err){
-//                 res.send(err);
-//             }
-//         }else{
-//             res.send('AH AH AH YOU DIDNT SAY THE MAGIC WORD');
-//         }
-//     })
+router.route('/:id/badges/:badgeId')
+    .get(async (req,res)=>{
+        try{
+            const foundUser = await User.findById(req.params.id);
+            if(foundUser){
+                const foundBadge = foundUser.badgeList.id(req.params.badgeId);
+                res.json({
+                    status: 200,
+                    data: foundBadge
+                })
+            }
+        }catch(err){
+            console.log(err);
+            return err;
+        }
+    })
+    .delete(async (req,res)=>{
+        try{
+            const foundUser = await User.findOne({'badgeList._id': req.params.badgeId});
+            foundUser.badgeList.id(req.params.badgeId).remove();
+            await foundUser.save();
+            res.json({
+                status: 200,
+                data: foundUser
+            });
+        }catch(err){
+            console.log(err);
+            return err;
+        }
+        
+    })
 
 module.exports = router;
