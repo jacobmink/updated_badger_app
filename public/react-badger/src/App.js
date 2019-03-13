@@ -4,10 +4,10 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import Profile from './Profile/Profile';
 import Login from './Auth/Login/Login';
 import UsersContainer from './UsersContainer/UsersContainer';
-import Registration from './Auth/Registration/Registration';
 import BadgeContainer from './BadgeContainer/BadgeContainer';
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
+import MyProfile from './MyProfile/MyProfile';
 
 import NewBadge from './NewBadge/NewBadge';
 
@@ -19,19 +19,23 @@ const My404 = ()=>{
   )
 }
 
-
-
 class App extends Component{
   constructor(props){
     super(props);
     this.state = {
-      user: {}
+      user: {},
+      loggedIn: {}
     }
   }
   getUserInfo = (userInfo)=>{
+    console.log('in getUserInfo', userInfo);
     this.setState({
-      user: userInfo
+      loggedIn: userInfo
+    }, ()=>{
+      console.log('holla back to myprofile');
+      this.props.history.push('/myprofile');
     })
+    
   }
   deleteBadge = async (id)=>{
     try{
@@ -44,9 +48,9 @@ class App extends Component{
       }
       const parsed = await response.json();
       this.setState({
-          user: parsed.data
+          loggedIn: parsed.data
       })
-      this.props.history.push("/profile");
+      this.props.history.push("/myprofile");
     }catch(err){
       console.log(err);
       return err;
@@ -56,7 +60,7 @@ class App extends Component{
   addBadge = async (data)=>{
     console.log(data, ' raw ass data');
     try{
-      const response = await fetch(`${process.env.REACT_APP_BACKEND}/users/${this.state.user._id}`,
+      const response = await fetch(`${process.env.REACT_APP_BACKEND}/users/${this.state.loggedIn._id}/badges`,
       {
         method: "POST",
         body: JSON.stringify(data),
@@ -70,15 +74,40 @@ class App extends Component{
       }
       const parsed = await response.json();
       this.setState({
-        user: parsed.data
+        loggedIn: parsed.data
       })
-      this.props.history.push("/profile");
+      this.props.history.push("/myprofile");
     }catch(err){
       console.log(err);
       return err;
     }
-    
+  }
 
+  likeUser = async (id)=>{
+    console.log('adding user with id ' + id + ' to likedUser array');
+    id = {id: id};
+    try{
+      const response = await fetch(`${process.env.REACT_APP_BACKEND}/users/${this.state.loggedIn._id}/connections`, {
+        method: "POST",
+        body: JSON.stringify(id),
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log(response, ' raw response from likeUser');
+      if(!response.ok){
+        throw Error(response.statusText);
+      }
+      const parsed = await response.json();
+      this.setState({
+        loggedIn: parsed.data
+      })
+      console.log(parsed.data, ' parsed likeUser data');
+    }catch(err){
+      console.log(err);
+      return err;
+    }
   }
 
   logout = async ()=>{
@@ -88,9 +117,13 @@ class App extends Component{
         credentials: 'include'
       });
       this.setState({
-        user: {}
+        user: {},
+        loggedIn: {}
+      }, ()=>{
+        this.props.history.push('/');
       });
-      this.props.history.push('/')
+      console.log(this.state, ' logout state');
+      
     }catch(err){
       console.log(err);
       return err;
@@ -122,16 +155,23 @@ class App extends Component{
       'trivia',
       'movie buff'
     ];
+    console.log(this.state, 'app.js render state');
+    console.log(this.props, 'app.js props');
     return(
       <main className="App">
         <Header logout={this.logout}/>
-        {JSON.stringify(this.state.user) === "{}" ?  <Login getUserInfo={this.getUserInfo}/>: 
+        {JSON.stringify(this.state.loggedIn) === "{}" ?  <Login getUserInfo={this.getUserInfo}/>: 
         <Switch>
           <Route exact path="/" render={props => <Login getUserInfo={this.getUserInfo}/> } />
-          <Route exact path="/profile" render={props => <Profile user={this.state.user}/> } />
-          <Route exact path="/users/:userId/badges/:badgeId" render={props => <BadgeContainer deleteBadge={this.deleteBadge} /> } />
-          <Route exact path="/swipe" render={props => <UsersContainer />} />
+          <Route path="/myprofile" render={props => {
+            console.log('my profile');
+            return <MyProfile user={this.state.loggedIn}/> }} />
+          <Route exact path="/users/:userId/badges/:badgeId" render={props => {
+            console.log('badgeContainer');
+            return <BadgeContainer deleteBadge={this.deleteBadge}  /> }} />
           <Route exact path="/newbadge" render={props => <NewBadge addBadge={this.addBadge} badgeTitles={badgeTitles} />} />
+          <Route exact path="/profile/:id" render={props => <Profile /> } />
+          <Route exact path="/swipe" render={props => <UsersContainer user={this.state.loggedIn} likeUser={this.likeUser}/>} />
           <Route component={ My404 } />
         </Switch>
         }
@@ -143,3 +183,8 @@ class App extends Component{
 }
 
 export default withRouter(App);
+
+/* TODO 
+- make review component, only allow review if match exists
+- delete user account fix
+*/

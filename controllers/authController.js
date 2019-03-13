@@ -59,18 +59,6 @@ router.route('/logout')
         });
     });
 
-// registration // create account
-
-// router.route('/createuser')
-//     .get((req,res)=>{
-//         res.render('auths/createuser.ejs', {
-//             message: req.session.message,
-//             genderList,
-//             ageList
-//         });
-//     })
-
-
 router.post('/registration', async (req,res)=>{
     try{
         const hashedPass = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
@@ -80,7 +68,7 @@ router.post('/registration', async (req,res)=>{
         req.session.username = req.body.username;
         res.json({
             status: 200,
-            data: 'registration successful'
+            data: createdUser
         })
     }catch(err){
         console.log(err);

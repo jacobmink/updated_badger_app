@@ -4,7 +4,7 @@ import { PromiseProvider } from 'mongoose';
 
 const Footer = (props)=>{
     return(
-        <div className="header">
+        <div className="footer">
             <ul>
                 <li>&copy; 2019 Jacob Mink</li>
             </ul>

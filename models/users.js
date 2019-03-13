@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Badge   = require('./badges');
+const Badge     = require('./badges');
+const Review    = require('./reviews');
 
  const userSchema = mongoose.Schema({
      username:      {type: String, required: true, unique: true},
@@ -11,7 +12,11 @@ const Badge   = require('./badges');
      age:           {type: Number, required: true},
      gender:        {type: String, required: true},
      flagged:       {type: Boolean},
-     badgeList:     [Badge.schema]
+     badgeList:     [Badge.schema],
+     likedUsers:    [this],
+     matchedUsers:  [this],
+     reviewsWritten:[Review.schema],
+     reviewsReceived:[Review.schema]
  });
 
  module.exports = mongoose.model('User', userSchema);

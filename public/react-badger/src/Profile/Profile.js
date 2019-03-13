@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import EditUser from '../EditUser/EditUser';
+import NewReview from '../NewReview/NewReview';
 
 class Profile extends Component{
     constructor(props){
         super(props);
         this.state = {
-            user: this.props.user,
+            user: this.props.location.state.user,
             userData: '',
             showModal: false,
             message: ''
@@ -50,52 +50,11 @@ class Profile extends Component{
             showModal: !this.state.showModal
         })
     }
-    editUser = async (data, e)=>{
-        e.preventDefault();
-        console.log(data);
-        try{
-            const response = await fetch(`${process.env.REACT_APP_BACKEND}/users/${this.state.user._id}`, {
-                method: 'PUT',
-                credentials: 'include',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            if(!response.ok){
-                throw Error(response.statusText);
-            }
-            const parsed = await response.json();
-            console.log(parsed.data, ' parsed updatedUser');
-            if(parsed.code && parsed.code === 11000){
-                this.setState({
-                    message: 'This username is already taken! Try again.'
-                })
-            }
-            this.setState({
-                showModal: false,
-                user: parsed.data,
-                message: ''
-            })
-
-        }catch(err){
-            console.log(err);
-            return err;
+    handlePageClick = (id, e)=>{
+        if(e.target.id === "likeButton"){
+            this.props.likeUser(id);
         }
-    }
-    deleteBook = async (id)=>{
-        const response = await fetch(`${process.env.REACT_APP_BACKEND}/users/books/${id}`, {
-            method: 'DELETE',
-            credentials: 'include'
-        })
-        if(!response.ok){
-            throw Error(response.statusText);
-        }
-        const parsed = await response.json();
-        this.setState({
-            user: parsed.data
-        })
-        this.getUser(this.state.user._id); //  TEST WITHOUT THIS LINE
+        this.props.history.push('/swipe');
     }
     componentDidMount(){
         this.getUser(this.state.user._id);
@@ -116,16 +75,15 @@ class Profile extends Component{
         //     <form onSubmit={this.deleteUser.bind(null, this.state.user._id)}><button>Delete this account</button>
         //     </form> : null;
 
-        const badgeListRender = this.state.user.badgeList.length === 0 ? "This user has no badges yet" : this.state.user.badgeList.map((badge)=>{
-            console.log(badge);
+        const badgeListRender = this.state.user.badgeList.length === 0 ? "This user has no badges yet" : this.state.user.badgeList.map((badge, i)=>{
             return (
                 
-                <li>
-                    {badge._id} <br/>
+                <li key={i}>
                     <Link to={{
                     pathname: `/users/${this.state.user._id}/badges/${badge._id}`,
                     state: {
                         user: this.state.user,
+                        loggedIn: this.props.location.state.loggedIn,
                         badge: badge
                     }
                 }}>{badge.title}</Link></li>
@@ -133,7 +91,8 @@ class Profile extends Component{
         })
         return(
             <div>
-                <h2>{this.state.user.displayName}'s Profile</h2>
+                <h2>{this.state.user.displayName}'s Profile <br/>
+                {this.state.message}</h2>
                 
 
                 <img src={this.state.user.img} /> <br/>
@@ -141,17 +100,18 @@ class Profile extends Component{
                 Age: { this.state.user.age } <br/>
                 Gender: { this.state.user.gender } <br/>
                 About: { this.state.user.about } <br/>
-                <button onClick={this.showModal} >Edit Profile</button> <br/>
-                {this.state.message} <br/>
-                {this.state.showModal ? <EditUser editUser={this.editUser} user={this.state.user}/> : null}
-                <button onClick={this.deleteUser.bind(null, this.state.user._id)} >Delete your Account</button> <br/>
-
-                Badges:
-                    {badgeListRender}
                 
-                <Link to="/newbadge"><button>Add Badge</button></Link>
+
+                Badges: <br/>
+                    {badgeListRender}
+                <br/>
+                <button onClick={this.handlePageClick.bind(null, this.state.user._id)} id="likeButton">Like</button> <button onClick={this.handlePageClick.bind(null, this.state.user._id)} id="DislikeButton">Not Like</button>
+                
+                
             </div>
         )
     }
 }
 export default withRouter(Profile);
+
+// {this.props.loggedIn.likedUsers.includes(this.state.user._id) ? <NewReview loggedIn={this.props.location.state.loggedIn} user={this.props.location.state.user} /> : null}

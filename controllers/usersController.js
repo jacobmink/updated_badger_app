@@ -11,7 +11,7 @@ const Badge = require('../models/badges');
 const EventModel = require('../models/events');
 
 
-const genderList = ['Male','Female','Other'];
+const genderList = ['male','female','other'];
 const ageList = [];
 for(let i = 18; i < 100; i++){
     ageList.push(i);
@@ -45,38 +45,40 @@ const badgeTitles = [
 router.route('/')
     // index
     .get(async (req,res)=>{
-        const loggedIn = await User.findOne({'username': req.session.username});
         try{
+            // console.log(req.query, ' req.query');
+            const loggedIn = await User.findOne({'username': req.session.username});
             if(JSON.stringify(req.query) == "{}"){
-                const allUsers = await User.find({
-                    'username': {$ne: req.session.username}
+                const allUsers = await User.find({ 
+                    $and: [
+                        { 'username': {$ne: loggedIn.username} },
+                        { '_id': { $nin: loggedIn.likedUsers } }
+                    ]
                 });
-                const parsed = await allUsers.json();
-                console.log(parsed, ' parsed users');
+                console.log(allUsers, ' raw allUsers');
                 res.json({
                     status: 200,
-                    data: parsed
+                    data: allUsers
                 })
-                // res.render('users/index.ejs', {
-                //     users: allUsers,
-                //     user: loggedIn,
-                //     genderList: genderList,
-                //     badges: badgeTitles,
-                //     sessionId: req.session.userId
-                // })
             }else{
-                let filteredUsers = await User.find({'username': {$ne: req.session.username}});
-                // filter by age
-                filteredUsers = filteredUsers.filter((user)=>{
-                    return (user.age >= req.query.minAge && user.age <=  req.query.maxAge);
+                let filteredUsers = await User.find({ 
+                    $and: [
+                        { 'username': {$ne: loggedIn.username} },
+                        { '_id': { $nin: loggedIn.likedUsers } }
+                    ]
                 });
+                console.log(filteredUsers, ' raw filteredUsers');
+                // filter by age
+                filteredUsers = (req.query.minAge && req.query.maxAge) ? filteredUsers.filter((user)=>{
+                    return (user.age >= req.query.minAge && user.age <=  req.query.maxAge);
+                }) : filteredUsers;
                 // filter by gender
                 if(req.query.gender){
                     if(!Array.isArray(req.query.gender)){
                         req.query.gender = [req.query.gender];
                     }
                     filteredUsers = filteredUsers.filter((user)=>{
-                        return req.query.gender.includes(user.gender);
+                        return req.query.gender.indexOf(user.gender) > -1;
                     });
                 }
                 // filter by badges wanted
@@ -91,13 +93,11 @@ router.route('/')
                         });
                     });
                 }
-                console.log(req.query);
-                res.render('users/index.ejs', {
-                    users: filteredUsers,
-                    user: loggedIn,
-                    genderList: genderList,
-                    badges: badgeTitles,
-                    sessionId: req.session.userId
+                console.log(req.query, ' req.query');
+                console.log(filteredUsers, ' filteredUsers');
+                res.json({
+                    status: 200,
+                    data: filteredUsers
                 })
             }
         }catch(err){
@@ -151,26 +151,6 @@ router.route('/:id')
             res.send(err);
         }
     })
-    // post new badge
-    .post(async (req,res)=>{
-        console.log(req.body)
-        try{
-            const foundUser = await User.findById(req.params.id);
-            const newBadge = await Badge.create({
-                title: req.body.title,
-                events: req.body.events
-            });
-            foundUser.badgeList.push(newBadge);
-            await foundUser.save();
-            res.json({
-                status: 200,
-                data: foundUser
-            });
-        }catch(err){
-            console.log(err);
-            res.send(err);
-        }
-    })
     // update profile
     .put(async (req,res)=>{
         try{
@@ -197,6 +177,45 @@ router.route('/:id')
             }
         }else{
             res.send("AH AH AH, YOU DIDN'T SAY THE MAGIC WORD");
+        }
+    })
+
+router.route('/:id/connections')
+    .post(async (req,res)=>{
+        try{
+            const foundUser = await User.findById(req.params.id);
+            const likedUser = await User.findById(req.body.id);
+            foundUser.likedUsers.addToSet(likedUser);
+            await foundUser.save();
+            res.json({
+                status: 200,
+                data: foundUser
+            })
+        }catch(err){
+            console.log(err);
+            return err;
+        }
+    })
+
+router.route('/:id/badges')
+    // post new badge
+    .post(async (req,res)=>{
+        console.log(req.body, ' new badge req.body');
+        try{
+            const foundUser = await User.findById(req.params.id);
+            const newBadge = await Badge.create({
+                title: req.body.title,
+                events: req.body.events
+            });
+            foundUser.badgeList.push(newBadge);
+            await foundUser.save();
+            res.json({
+                status: 200,
+                data: foundUser
+            });
+        }catch(err){
+            console.log(err);
+            res.send(err);
         }
     })
 
