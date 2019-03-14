@@ -27,12 +27,12 @@ class Registration extends Component{
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(response, ' raw register response');
+            // console.log(response, ' raw register response');
             if(!response.ok){
                 throw Error(response.statusText);
             }
             const parsed = await response.json();
-            console.log(parsed, ' created user');
+            // console.log(parsed, ' created user');
             if(parsed.data){
                 this.setState({
                     message: ''
@@ -56,7 +56,7 @@ class Registration extends Component{
         })
     }
     render(){
-        console.log(this.state);
+        // console.log(this.state);
         const ageList = [];
         const genderList = ['male','female','other'];
         for(let i = 18; i < 100; i++){

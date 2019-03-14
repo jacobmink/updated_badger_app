@@ -29,9 +29,12 @@ class UsersContainer extends Component{
                 throw Error(foundUsers.statusText);
             }
             const parsed = await foundUsers.json();
-            console.log(parsed.data);
+            console.log(parsed.data, ' foundUsers');
+            const notAlreadyLiked = parsed.data.filter((user)=>{
+                return !this.state.loggedIn.likedUsers.includes(user._id);
+            })
             this.setState({
-                users: parsed.data
+                users: notAlreadyLiked
             })
         }catch(err){
             console.log(err);

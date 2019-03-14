@@ -81,7 +81,9 @@ class MyProfile extends Component{
         })
         this.getUser(this.state.user._id); //  TEST WITHOUT THIS LINE
     }
-  
+    componentDidMount(){
+        this.props.getUsers();
+    }
     render(){
         const badgeTitles = [
             'hike',
@@ -108,7 +110,6 @@ class MyProfile extends Component{
             'trivia',
             'movie buff'
           ];
-        console.log(this.state, '  state from profile');
         // const likedBooks = this.state.userData.length === 0 ? 'None' : this.state.userData.data.likedBooks.map((book)=>{
         //     return(
         //         <ul key={book._id} className="liked-books">
@@ -139,12 +140,19 @@ class MyProfile extends Component{
         })
 
         const matchList = this.state.user.matchedUsers.length === 0 ? "You haven't matched with anyone yet..." : this.state.user.matchedUsers.map((match, i)=>{
+            return (this.props.users.filter((user, i)=>{
+                return user._id === match
+            }))
+            
+        })
+        const renderMatches = matchList[0].map((user, i)=>{
             return(
-                <li key={i}>
-                    {match.username}
+                <li>
+                    {user.username}
                 </li>
             )
         })
+        console.log(matchList);
 
         return(
             <div>
@@ -152,7 +160,7 @@ class MyProfile extends Component{
                 {this.state.message}</h2>
                 
 
-                <img src={this.state.user.img} /> <br/>
+                <img src={this.state.user.img} alt={this.state.user.img}/> <br/>
                 Username: { this.state.user.username } <br/>
                 Age: { this.state.user.age } <br/>
                 Gender: { this.state.user.gender } <br/>
@@ -166,7 +174,7 @@ class MyProfile extends Component{
                 
                 <Link to="/newbadge"><button>Add Badge</button></Link> <br/>
                 Your Matches: <br/>
-                {matchList}
+                {renderMatches}
             </div>
         )
     }

@@ -13,8 +13,8 @@ const Review    = require('./reviews');
      gender:        {type: String, required: true},
      flagged:       {type: Boolean},
      badgeList:     [Badge.schema],
-     likedUsers:    [this],
-     matchedUsers:  [this],
+     likedUsers:    [{type: String}],
+     matchedUsers:  [{type: String}],
      reviewsWritten:[Review.schema],
      reviewsReceived:[Review.schema]
  });

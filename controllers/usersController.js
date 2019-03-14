@@ -51,8 +51,7 @@ router.route('/')
             if(JSON.stringify(req.query) == "{}"){
                 const allUsers = await User.find({ 
                     $and: [
-                        { 'username': {$ne: loggedIn.username} },
-                        { '_id': { $nin: loggedIn.likedUsers } }
+                        { 'username': {$ne: req.session.username} }
                     ]
                 });
                 console.log(allUsers, ' raw allUsers');
@@ -63,8 +62,7 @@ router.route('/')
             }else{
                 let filteredUsers = await User.find({ 
                     $and: [
-                        { 'username': {$ne: loggedIn.username} },
-                        { '_id': { $nin: loggedIn.likedUsers } }
+                        { 'username': {$ne: loggedIn.username} }
                     ]
                 });
                 console.log(filteredUsers, ' raw filteredUsers');
@@ -185,7 +183,14 @@ router.route('/:id/connections')
         try{
             const foundUser = await User.findById(req.params.id);
             const likedUser = await User.findById(req.body.id);
-            foundUser.likedUsers.addToSet(likedUser);
+            foundUser.likedUsers.addToSet(likedUser._id);
+            if(likedUser.likedUsers.includes(String(foundUser._id))){
+                console.log(likedUser.likedUsers, ' likedUser.likedUsers');
+                foundUser.matchedUsers.addToSet(String(likedUser._id));
+                likedUser.matchedUsers.addToSet(String(foundUser._id));
+                await likedUser.save();
+                await foundUser.save();
+            }
             await foundUser.save();
             res.json({
                 status: 200,

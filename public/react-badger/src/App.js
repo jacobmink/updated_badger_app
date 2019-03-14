@@ -24,15 +24,37 @@ class App extends Component{
     super(props);
     this.state = {
       user: {},
-      loggedIn: {}
+      loggedIn: {},
+      users: []
     }
   }
+
+  getUsers = async ()=>{
+    const url = `${process.env.REACT_APP_BACKEND}/users`;
+    try{
+        const foundUsers = await fetch(url, {
+        method: 'GET',
+        credentials: 'include'
+        })
+        if(!foundUsers.ok){
+            throw Error(foundUsers.statusText);
+        }
+        const parsed = await foundUsers.json();
+        console.log(parsed.data, ' foundUsers');
+        this.setState({
+            users: parsed.data
+        })
+    }catch(err){
+        console.log(err);
+        return err;
+    }
+  }
+
   getUserInfo = (userInfo)=>{
-    console.log('in getUserInfo', userInfo);
+    // console.log('in getUserInfo', userInfo);
     this.setState({
       loggedIn: userInfo
     }, ()=>{
-      console.log('holla back to myprofile');
       this.props.history.push('/myprofile');
     })
     
@@ -95,7 +117,7 @@ class App extends Component{
           'Content-Type': 'application/json'
         }
       });
-      console.log(response, ' raw response from likeUser');
+      // console.log(response, ' raw response from likeUser');
       if(!response.ok){
         throw Error(response.statusText);
       }
@@ -103,7 +125,7 @@ class App extends Component{
       this.setState({
         loggedIn: parsed.data
       })
-      console.log(parsed.data, ' parsed likeUser data');
+      // console.log(parsed.data, ' parsed likeUser data');
     }catch(err){
       console.log(err);
       return err;
@@ -156,7 +178,7 @@ class App extends Component{
       'movie buff'
     ];
     console.log(this.state, 'app.js render state');
-    console.log(this.props, 'app.js props');
+    // console.log(this.props, 'app.js props');
     return(
       <main className="App">
         <Header logout={this.logout}/>
@@ -164,8 +186,8 @@ class App extends Component{
         <Switch>
           <Route exact path="/" render={props => <Login getUserInfo={this.getUserInfo}/> } />
           <Route path="/myprofile" render={props => {
-            console.log('my profile');
-            return <MyProfile user={this.state.loggedIn}/> }} />
+            // console.log('my profile');
+            return <MyProfile user={this.state.loggedIn} getUsers={this.getUsers} users={this.state.users}/> }} />
           <Route exact path="/users/:userId/badges/:badgeId" render={props => {
             console.log('badgeContainer');
             return <BadgeContainer deleteBadge={this.deleteBadge}  /> }} />

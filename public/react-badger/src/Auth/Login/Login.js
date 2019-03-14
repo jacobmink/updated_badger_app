@@ -31,14 +31,14 @@ class Login extends Component{
                 throw Error(loginResponse.statusText);
             }
             const parsed = await loginResponse.json();
-            console.log(parsed.info, ' parsed.info');
+            // console.log(parsed.info, ' parsed.info');
             if(parsed.data === 'login successful'){
-                console.log('parsed.data login successful');
-                // this.setState({
-                //     message: ''
-                // })
+                // console.log('parsed.data login successful');
+                this.setState({
+                    message: ''
+                })
                 this.props.getUserInfo(parsed.info);
-                console.log('redirecting to my profile');
+                // console.log('redirecting to my profile');
             }else{
                 this.setState({
                     message: "Incorrect username or password"
