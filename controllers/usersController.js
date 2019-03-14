@@ -9,6 +9,7 @@ const paginate = require('paginate')({
 const User = require('../models/users');
 const Badge = require('../models/badges');
 const EventModel = require('../models/events');
+const Review = require('../models/reviews');
 
 
 const genderList = ['male','female','other'];
@@ -163,18 +164,24 @@ router.route('/:id')
     })
     // delete account
     .delete(async (req,res)=>{
-        if(req.session.userId === req.params.id){
+        console.log(req.params.id, req.session.userId)
+        if(req.session.userId.toString() === req.params.id.toString()){
+            console.log('do they match?')
             try{
                 await User.findByIdAndDelete(req.params.id);
-                res.json({
-                    status: 200,
-                    data: 'Successfully deleted user'
+                req.session.destroy((err)=>{
+                    console.log('trying to destroy session')
+                    if(err){
+                        res.send(err);
+                    }
+                    res.json({
+                        status: 200,
+                        data: 'Successfully deleted user and logout successful'
+                    })
                 })
             }catch(err){
                 res.send(err);
             }
-        }else{
-            res.send("AH AH AH, YOU DIDN'T SAY THE MAGIC WORD");
         }
     })
 
@@ -217,6 +224,32 @@ router.route('/:id/badges')
             res.json({
                 status: 200,
                 data: foundUser
+            });
+        }catch(err){
+            console.log(err);
+            res.send(err);
+        }
+    })
+
+router.route('/:id/reviews')
+    // post new badge
+    .post(async (req,res)=>{
+        console.log(req.body, ' new review req.body');
+        try{
+            const reviewer = await User.findById(req.params.id);
+            const reviewee = await User.findById(req.body.reviewee_id);
+            const newReview = await Review.create({
+                text: req.body.text,
+                reviewee_id: req.body.reviewee_id,
+                stars: req.body.stars
+            });
+            reviewer.reviewsWritten.push(newReview);
+            reviewee.reviewsReceived.push(newReview);
+            await reviewer.save();
+            await reviewee.save();
+            res.json({
+                status: 200,
+                data: reviewer
             });
         }catch(err){
             console.log(err);

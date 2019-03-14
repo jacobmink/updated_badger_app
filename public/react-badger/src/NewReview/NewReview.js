@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 
 class NewReview extends Component{
     constructor(props){
         super(props);
         this.state = {
-            reviewer_id: this.props.loggedIn._id,
+            // reviewer_id: this.props.loggedIn._id,
             stars: '',
             text: '',
             reviewee_id: this.props.user._id

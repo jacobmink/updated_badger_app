@@ -5,6 +5,7 @@ class NewBadge extends Component{
     constructor(props){
         super(props);
         this.state = {
+            message: '',
             title: this.props.badgeTitles[0],
             img1: '',
             img2: '',
@@ -27,7 +28,16 @@ class NewBadge extends Component{
                     {img: this.state.img2, description: this.state.description2},
                     {img: this.state.img3, description: this.state.description3}]
         }
-        this.props.addBadge(newBadge);
+        newBadge.events.forEach((event)=>{
+            if(event.description == ''){
+                this.setState({
+                    message: 'Please fill in all boxes'
+                })
+            }else{
+                this.props.addBadge(newBadge);
+            }
+        })
+        
     }
     render(){
         console.log(this.state);
@@ -40,7 +50,7 @@ class NewBadge extends Component{
         return(
             <div>
                 <h1>Add Badge</h1>
-                <div className="error-window"></div>
+                <div className="error-window">{this.state.message}</div>
                 <form id="badgeform" onSubmit={this.handleSubmit}>
                     <h3>Enter Badge Title</h3>
                     <select id="badges" name="title" onChange={this.handleInput}>

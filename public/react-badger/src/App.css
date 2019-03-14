@@ -1,6 +1,6 @@
 body{
   /* background: url('/transparentbadgerbg.jpg'); */
-  background: lightblue;
+  background: rgb(203, 219, 224);
   background-position: center;
   background-size: 200px;
   background-repeat: repeat;
@@ -11,9 +11,28 @@ body{
   text-align: center;
 }
 
+.profile-icon{
+  height: 50px;
+  width: 40px;
+}
+
+.heart-icon{
+  height: 50px;
+  width: 50px;
+}
+
+.pencil-icon{
+  height: 20px;
+}
+
 h1{
-  color: rgb(240, 99, 34);
-  text-shadow: 3px 2px black;
+  color: rgb(48, 16, 224);
+  text-shadow: 1px 1px black;
+}
+
+h3{
+  color: rgb(48, 16, 224);
+  text-shadow: 1px 1px black;
 }
 
 a{
@@ -22,33 +41,52 @@ a{
 
 button{
   border-radius: 5px;
-  font-size: 1em;
-  height: 30px;
+  height: 20px;
+  font-weight: 500;
+  background: rgb(48, 16, 224);
+  color: white;
+  transition-duration: .4s;
+  -webkit-transition-duration: .4s;
+}
+
+button:hover{
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.delete-button{
+  background: red;
+  border-radius: 40%;
+  height: auto;
+  transition-duration: .4s;
+  -webkit-transition-duration: .4s;
+}
+
+button.delete-button:hover{
+  color: black;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 
 .header{
   text-align: center;
-  border-bottom: 2px solid lightgrey;
+  border-bottom: 2px solid rgb(93, 186, 230);
 }
 
 .header li{
   display: inline-block;
-  margin: 3px;
+  margin: 0 5vw;
 }
 
-.header button{
-  background: blue;
-  color: white;
+.registration-form{
+  width: 50%;
+  margin: 0 auto;
+  text-align: left;
 }
 
 main{
   text-align: center;
-  min-height: calc(100vh - 10px);
-}
-
-main button{
-  background: rgb(183, 35, 241);
-  color: white;
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
 }
 
 main li{
@@ -64,23 +102,46 @@ main ul{
   height: 100%;
   padding-top: 0;
   padding-bottom: 5px;
-  border-bottom: 2px solid lightgrey;
+  border-bottom: 2px solid rgb(93, 186, 230);
 }
 
-.filter-form div{
-  display: inline-block;
-  height: 100%;
+.filter-form > div{
+  display: block;
+  height: 50%;
   margin-top: 0;
+  padding: 0;
 }
 
-.registration-form{
-  width: 50%;
-  margin: 0 auto;
-  text-align: left;
+.filter-box{
+  /* border: 1px solid rgb(93, 186, 230); */
+  padding: 0;
 }
 
-.filters div{
-  padding: 10px;
+.filter-box h3{
+  background: rgba(128, 128, 128, 0.514);
+}
+
+.badge-filter-box{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 2fr;
+}
+
+.badge-filter-box h3{
+  grid-column-start: 0;
+  grid-column-end: 2;
+}
+
+.badge-filter-box div{
+  display: inline-block;
+}
+
+.swipe-users{
+  border-top: 2px solid rgb(93, 186, 230);
+}
+
+.gender-and-age div{
+  display: block;
 }
 
 .badge-container li{
@@ -94,10 +155,13 @@ main ul{
 }
 
 .footer{
-  border-top: 2px solid lightgrey;
-  position: relative;
-  bottom: 0;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  border-top: 2px solid rgb(93, 186, 230);
+  /* flex-shrink: 0; */
+  /* position: relative; */
+  /* bottom: 0;
   left: 0;
   right: 0;
-  height: 10px;
+  height: 10px; */
 }

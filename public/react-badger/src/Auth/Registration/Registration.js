@@ -74,7 +74,7 @@ class Registration extends Component{
         });
         return(
             <div>
-                <h1>Create Your Profile</h1>
+                <h3>Create Your Profile</h3>
                 <section className="registration-form">
                     {this.state.message}
                     <div className="error-window"></div>

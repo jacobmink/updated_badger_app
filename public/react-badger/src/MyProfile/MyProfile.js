@@ -3,6 +3,7 @@ import { Route, Switch, withRouter, Link } from 'react-router-dom';
 import EditUser from '../EditUser/EditUser';
 import NewBadge from '../NewBadge/NewBadge';
 import BadgeContainer from '../BadgeContainer/BadgeContainer';
+import NewReview from '../NewReview/NewReview';
 
 class MyProfile extends Component{
     constructor(props){
@@ -11,6 +12,7 @@ class MyProfile extends Component{
             user: this.props.user,
             userData: '',
             showModal: false,
+            showReviewForm: false,
             message: ''
         }
     }
@@ -23,6 +25,10 @@ class MyProfile extends Component{
             if(!response.ok){
                 throw Error(response.statusText);
             }
+            console.log(response.body)
+            const parsed = await response.json();
+            
+            console.log(parsed, ' deleteUser response');
             this.props.history.push('/')
         }catch(err){
             console.log(err);
@@ -34,6 +40,12 @@ class MyProfile extends Component{
             showModal: !this.state.showModal
         })
     }
+    showReviewForm = (e)=>{
+        this.setState({
+            showReviewForm: !this.state.showReviewForm
+        })
+    }
+   
     editUser = async (data, e)=>{
         e.preventDefault();
         console.log(data);
@@ -139,16 +151,34 @@ class MyProfile extends Component{
             )
         })
 
-        const matchList = this.state.user.matchedUsers.length === 0 ? "You haven't matched with anyone yet..." : this.state.user.matchedUsers.map((match, i)=>{
+        const matchList = this.state.user.matchedUsers.length === 0 ? null : this.state.user.matchedUsers.map((match, i)=>{
             return (this.props.users.filter((user, i)=>{
                 return user._id === match
             }))
             
         })
-        const renderMatches = matchList[0].map((user, i)=>{
+        const renderMatches = matchList === null ? "You haven't matched with anyone yet..." : matchList[0].map((user, i)=>{
             return(
                 <li>
-                    {user.username}
+                    <Link to={{
+                        pathname:`/profile/${user._id}`,
+                        state: {
+                            user: user,
+                            loggedIn: this.state.loggedIn
+                        }
+                    }}>{user.displayName}
+                    </Link>
+                    <Link to={{
+                        pathname:"/newreview",
+                        state: {
+                            user: user
+                        }}}>
+                    <button>Add a review for {user.displayName}</button>
+                    </Link>
+                    <button onClick={this.showReviewForm} >Leave a Review for {user.displayName}</button>
+                    {this.state.showReviewForm ? <NewReview user={user}/> : null}
+                    
+                    
                 </li>
             )
         })
@@ -156,8 +186,8 @@ class MyProfile extends Component{
 
         return(
             <div>
-                <h2>{this.state.user.displayName}'s Profile <button onClick={this.showModal} >Edit</button> <br/>
-                {this.state.message}</h2>
+                <h2>{this.state.user.displayName}'s Profile <img className="pencil-icon" src="/pencil_icon.png" alt="pencil" onClick={this.showModal}/>
+                {this.state.message} <button onClick={this.props.logout}>Logout</button></h2>
                 
 
                 <img src={this.state.user.img} alt={this.state.user.img}/> <br/>
@@ -166,15 +196,25 @@ class MyProfile extends Component{
                 Gender: { this.state.user.gender } <br/>
                 About: { this.state.user.about } <br/>
                  <br/>
-                {this.state.showModal ? <EditUser editUser={this.editUser} user={this.state.user}/> : null}
-                <button onClick={this.deleteUser.bind(null, this.state.user._id)} >Delete your Account</button> <br/>
+                {this.state.showModal ? <EditUser editUser={this.editUser} user={this.state.user} deleteUser={this.deleteUser}/> : null}
+                 <br/>
 
-                Badges: <br/>
-                    {badgeListRender} <br/>
+                 {this.state.showModal ? null : <div>Badges: <br/>
+                {badgeListRender} <br/></div>}
                 
-                <Link to="/newbadge"><button>Add Badge</button></Link> <br/>
-                Your Matches: <br/>
-                {renderMatches}
+                {this.state.showModal ? null : 
+                    <Link to="/newbadge"><button>Add Badge</button></Link>}
+                     <br/>
+                {this.state.showModal ? null : <div>Your Matches: <br/>
+                    <ul className="match-list">
+                        {renderMatches}
+                    </ul></div> }
+                    
+                    
+                
+                
+                
+                
             </div>
         )
     }

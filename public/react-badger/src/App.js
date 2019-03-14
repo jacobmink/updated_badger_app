@@ -10,6 +10,7 @@ import Footer from './Footer/Footer';
 import MyProfile from './MyProfile/MyProfile';
 
 import NewBadge from './NewBadge/NewBadge';
+import NewReview from './NewReview/NewReview';
 
 const My404 = ()=>{
   return(
@@ -104,6 +105,29 @@ class App extends Component{
       return err;
     }
   }
+  addReview = async (data)=>{
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND}/users/${this.state.loggedIn._id}/reviews`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if(!response.ok){
+        throw Error(response.statusText);
+      }
+      const parsed = await response.json();
+      this.setState({
+        loggedIn: parsed.data
+      })
+      this.props.history.push("/myprofile");
+    }catch(err){
+      console.log(err);
+      return err;
+    }
+  }
 
   likeUser = async (id)=>{
     console.log('adding user with id ' + id + ' to likedUser array');
@@ -181,22 +205,31 @@ class App extends Component{
     // console.log(this.props, 'app.js props');
     return(
       <main className="App">
-        <Header logout={this.logout}/>
-        {JSON.stringify(this.state.loggedIn) === "{}" ?  <Login getUserInfo={this.getUserInfo}/>: 
-        <Switch>
-          <Route exact path="/" render={props => <Login getUserInfo={this.getUserInfo}/> } />
-          <Route path="/myprofile" render={props => {
-            // console.log('my profile');
-            return <MyProfile user={this.state.loggedIn} getUsers={this.getUsers} users={this.state.users}/> }} />
-          <Route exact path="/users/:userId/badges/:badgeId" render={props => {
-            console.log('badgeContainer');
-            return <BadgeContainer deleteBadge={this.deleteBadge}  /> }} />
-          <Route exact path="/newbadge" render={props => <NewBadge addBadge={this.addBadge} badgeTitles={badgeTitles} />} />
-          <Route exact path="/profile/:id" render={props => <Profile /> } />
-          <Route exact path="/swipe" render={props => <UsersContainer user={this.state.loggedIn} likeUser={this.likeUser}/>} />
-          <Route component={ My404 } />
-        </Switch>
-        }
+        <div className="wrapper">
+          <Header />
+          {JSON.stringify(this.state.loggedIn) === "{}" ?  <Login getUserInfo={this.getUserInfo}/>: 
+          <Switch>
+            <Route exact path="/" render={props => <Login getUserInfo={this.getUserInfo}/> } />
+
+            <Route path="/myprofile" render={props => {
+              return <MyProfile logout={this.logout} user={this.state.loggedIn} getUsers={this.getUsers} users={this.state.users}/> }} />
+
+            <Route exact path="/users/:userId/badges/:badgeId" render={props => {
+              console.log('badgeContainer');
+              return <BadgeContainer deleteBadge={this.deleteBadge}  /> }} />
+
+            <Route exact path="/newbadge" render={props => <NewBadge addBadge={this.addBadge} badgeTitles={badgeTitles} />} />
+
+            
+
+            <Route exact path="/profile/:id" render={props => <Profile /> } />
+
+            <Route exact path="/swipe" render={props => <UsersContainer user={this.state.loggedIn} likeUser={this.likeUser}/>} />
+
+            <Route component={ My404 } />
+          </Switch>
+          }
+        </div>
         <Footer />
       </main>
     )
@@ -208,5 +241,8 @@ export default withRouter(App);
 
 /* TODO 
 - make review component, only allow review if match exists
-- delete user account fix
 */
+
+// {/* <Route exact path="/newreview" render={props => {
+//             console.log('newreview');
+//             return <NewReview addReview={this.addReview} />}} /> */}

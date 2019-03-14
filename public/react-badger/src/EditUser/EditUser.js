@@ -40,7 +40,7 @@ class EditUser extends Component {
         });
         return(
             <div>
-                <h1>Edit User Profile</h1>
+                <h3>Edit User Profile</h3>
                 <section className="main-form">
                     <form onSubmit={editUser.bind(null, this.state)}>
                         Username: <input type="text" name="username" value={this.state.username} onChange={this.handleEditInput}/><br/>
@@ -57,6 +57,7 @@ class EditUser extends Component {
                         Photo: <input type="text" name="img" value={this.state.img} onChange={this.handleEditInput}/><br/>
                         <button type="submit">Update Profile</button>
                     </form>
+                    <button className="delete-button" onClick={this.props.deleteUser.bind(null, this.props.user._id)} >Delete <br/> your <br/> Account</button>
                 </section>
             </div>
     

@@ -5,11 +5,11 @@ import { PromiseProvider } from 'mongoose';
 const Header = (props)=>{
     return(
         <div className="header">
-            <h1>Badger</h1>
+            <h3>Badger</h3>
             <ul>
-                <li>  <Link to="/myprofile"><button>My Profile</button></Link></li>
-                <li>  <Link to="/swipe"><button>Start Swiping!</button></Link></li>
-                <li><button onClick={props.logout}>Logout</button></li>
+                <li>  <Link to="/myprofile"><img className="profile-icon" src="/profile_icon.jpg" alt="profile icon"/></Link></li>
+                <li>  <Link to="/swipe"><img className="heart-icon" src="/heart_icon.png" alt="heart"/></Link></li>
+                
             </ul>
             
         </div>

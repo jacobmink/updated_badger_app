@@ -157,8 +157,9 @@ class UsersContainer extends Component{
         const badgeArr = [];
         for(let i = 0; i < badges.length; i++) { 
             badgeArr.push(<div>
-                <input type="checkbox" name="badgesWanted" value={badges[i]} onChange={this.handleBadges}/> {badges[i]} <br/>
-                </div>
+                <input type="checkbox" name="badgesWanted" value={badges[i]} onChange={this.handleBadges}/> {badges[i]}
+            </div>
+                
             );
         }
         const ages = [];
@@ -201,32 +202,31 @@ class UsersContainer extends Component{
         
         return(
             <div>
-                <h1>These are the users</h1>
                 <button className="filter-button" onClick={this.toggleFilters}>Filters</button>
                 <section className="filters">
                     {this.state.filtersOn ?
                         <form id="filter-form" className="filter-form" onSubmit={this.handleSubmit} >
-                        <div>
-                            <h3>Gender:</h3>
-                            <input type="checkbox" name="gender" value="male" onChange={this.handleGender}/> Male<br/>
-                            <input type="checkbox" name="gender" value="female" onChange={this.handleGender}/> Female<br/>
-                            <input type="checkbox" name="gender" value="other" onChange={this.handleGender}/> Other<br/>
+                        <div className="gender-and-age">
+                            <div className="filter-box">
+                                <h3>Gender:</h3>
+                                <input type="checkbox" name="gender" value="male" onChange={this.handleGender}/> Male<br/>
+                                <input type="checkbox" name="gender" value="female" onChange={this.handleGender}/> Female<br/>
+                                <input type="checkbox" name="gender" value="other" onChange={this.handleGender}/> Other<br/>
+                            </div>
+                            <div className="filter-box">
+                                <h3>Age: </h3>
+                                <select name="minAge" onChange={this.handleAge}>
+                                <option value="min">Min</option>
+                                    {ages}
+                                </select>
+                                <small>-</small>
+                                <select name="maxAge" onChange={this.handleAge}>
+                                <option value="max">Max</option>
+                                    {ages}
+                                </select>
+                            </div>
                         </div>
-                        
-                        <div>
-                            <h3>Age: </h3>
-                            <select name="minAge" onChange={this.handleAge}>
-                            <option value="min">Min</option>
-                                {ages}
-                            </select>
-                            <small>-</small>
-                            <select name="maxAge" onChange={this.handleAge}>
-                            <option value="max">Max</option>
-                                {ages}
-                            </select>
-                        </div>
-                        
-                        <div>
+                        <div className="filter-box badge-filter-box">
                             <h3>Badges</h3>
                             {badgeArr}
                         </div><br/>
@@ -234,10 +234,8 @@ class UsersContainer extends Component{
                         <button type="submit">Submit</button>
                     </form> : null
                     }
-                    
-
                 </section>
-                <section>
+                <section className="swipe-users" >
                     <ul>
                        {renderUsers}
                     </ul>
