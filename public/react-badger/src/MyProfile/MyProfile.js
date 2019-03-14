@@ -94,7 +94,8 @@ class MyProfile extends Component{
         this.getUser(this.state.user._id); //  TEST WITHOUT THIS LINE
     }
     componentDidMount(){
-        this.props.getUsers();
+        console.log('myprofile mounted');
+        // this.props.getUsers();
     }
     render(){
         const badgeTitles = [
@@ -151,72 +152,39 @@ class MyProfile extends Component{
             )
         })
 
-        const matchList = this.state.user.matchedUsers.length === 0 ? null : this.state.user.matchedUsers.map((match, i)=>{
-            return (this.props.users.filter((user, i)=>{
-                return user._id === match
-            }))
-            
-        })
-        const renderMatches = matchList === null ? "You haven't matched with anyone yet..." : matchList[0].map((user, i)=>{
-            return(
-                <li>
-                    <Link to={{
-                        pathname:`/profile/${user._id}`,
-                        state: {
-                            user: user,
-                            loggedIn: this.state.loggedIn
-                        }
-                    }}>{user.displayName}
-                    </Link>
-                    <Link to={{
-                        pathname:"/newreview",
-                        state: {
-                            user: user
-                        }}}>
-                    <button>Add a review for {user.displayName}</button>
-                    </Link>
-                    <button onClick={this.showReviewForm} >Leave a Review for {user.displayName}</button>
-                    {this.state.showReviewForm ? <NewReview user={user}/> : null}
-                    
-                    
-                </li>
-            )
-        })
-        console.log(matchList);
-
         return(
             <div>
-                <h2>{this.state.user.displayName}'s Profile <img className="pencil-icon" src="/pencil_icon.png" alt="pencil" onClick={this.showModal}/>
-                {this.state.message} <button onClick={this.props.logout}>Logout</button></h2>
+                <h3>Your Profile <img className="pencil-icon" src="/pencil_icon.png" alt="pencil" onClick={this.showModal}/>
+                {this.state.message} <button onClick={this.props.logout}>Logout</button></h3>
                 
 
-                <img src={this.state.user.img} alt={this.state.user.img}/> <br/>
-                Username: { this.state.user.username } <br/>
-                Age: { this.state.user.age } <br/>
-                Gender: { this.state.user.gender } <br/>
-                About: { this.state.user.about } <br/>
-                 <br/>
-                {this.state.showModal ? <EditUser editUser={this.editUser} user={this.state.user} deleteUser={this.deleteUser}/> : null}
-                 <br/>
-
-                 {this.state.showModal ? null : <div>Badges: <br/>
-                {badgeListRender} <br/></div>}
                 
-                {this.state.showModal ? null : 
-                    <Link to="/newbadge"><button>Add Badge</button></Link>}
-                     <br/>
-                {this.state.showModal ? null : <div>Your Matches: <br/>
-                    <ul className="match-list">
-                        {renderMatches}
-                    </ul></div> }
-                    
-                    
-                
-                
-                
+                {this.state.showModal ? <div>
+                    <EditUser editUser={this.editUser} user={this.state.user} deleteUser={this.deleteUser}/> <br/>
+                </div>  : null}
+                 
+                 {this.state.showModal ? null : 
+                 <div>
+                    <img src={this.state.user.img} alt={this.state.user.img} className="profile-pic" /> <br/>
+                    Age: { this.state.user.age } <br/>
+                    Gender: { this.state.user.gender } <br/>
+                    About: { this.state.user.about } <br/>
+                    Badges: <br/>
+                    {badgeListRender} <br/>
+                    <Link to="/newbadge"><button>Add Badge</button></Link>
+                </div>}
                 
             </div>
         )
     }
 }
 export default withRouter(MyProfile);
+
+
+// {this.state.showModal ? null : 
+//     <Link to="/newbadge"><button>Add Badge</button></Link>}
+//      <br/>
+// {this.state.showModal ? null : <div>Your Matches: <br/>
+//     <ul className="match-list">
+//         {renderMatches}
+//     </ul></div> }

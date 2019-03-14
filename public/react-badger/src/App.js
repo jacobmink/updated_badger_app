@@ -11,6 +11,8 @@ import MyProfile from './MyProfile/MyProfile';
 
 import NewBadge from './NewBadge/NewBadge';
 import NewReview from './NewReview/NewReview';
+import ReviewsContainer from './ReviewsContainer/ReviewsContainer';
+import MatchesContainer from './MatchesContainer/MatchesContainer';
 
 const My404 = ()=>{
   return(
@@ -31,6 +33,7 @@ class App extends Component{
   }
 
   getUsers = async ()=>{
+    console.log('in getUsers');
     const url = `${process.env.REACT_APP_BACKEND}/users`;
     try{
         const foundUsers = await fetch(url, {
@@ -44,6 +47,9 @@ class App extends Component{
         console.log(parsed.data, ' foundUsers');
         this.setState({
             users: parsed.data
+        }, ()=>{
+          console.log(this.state, ' state from getUsers, now pushing to myprofile')
+          this.props.history.push('/myprofile');
         })
     }catch(err){
         console.log(err);
@@ -52,11 +58,11 @@ class App extends Component{
   }
 
   getUserInfo = (userInfo)=>{
-    // console.log('in getUserInfo', userInfo);
+    console.log('in getUserInfo');
     this.setState({
       loggedIn: userInfo
     }, ()=>{
-      this.props.history.push('/myprofile');
+      this.getUsers();
     })
     
   }
@@ -98,14 +104,17 @@ class App extends Component{
       const parsed = await response.json();
       this.setState({
         loggedIn: parsed.data
+      }, ()=>{
+        this.props.history.push("/myprofile");
       })
-      this.props.history.push("/myprofile");
+      
     }catch(err){
       console.log(err);
       return err;
     }
   }
   addReview = async (data)=>{
+    console.log('trying to addReview')
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND}/users/${this.state.loggedIn._id}/reviews`, {
         method: 'POST',
@@ -119,10 +128,12 @@ class App extends Component{
         throw Error(response.statusText);
       }
       const parsed = await response.json();
+      console.log(parsed, ' parsed addReview response');
       this.setState({
         loggedIn: parsed.data
+      }, ()=>{
+        this.props.history.push("/myprofile");
       })
-      this.props.history.push("/myprofile");
     }catch(err){
       console.log(err);
       return err;
@@ -141,7 +152,6 @@ class App extends Component{
           'Content-Type': 'application/json'
         }
       });
-      // console.log(response, ' raw response from likeUser');
       if(!response.ok){
         throw Error(response.statusText);
       }
@@ -149,7 +159,6 @@ class App extends Component{
       this.setState({
         loggedIn: parsed.data
       })
-      // console.log(parsed.data, ' parsed likeUser data');
     }catch(err){
       console.log(err);
       return err;
@@ -187,32 +196,33 @@ class App extends Component{
       'religion',
       'videogame',
       'ski/snowboard',
-      'bar games',
+      'bar_games',
       'boardgames',
       'running',
-      'international travel',
+      'international_travel',
       'calligraphy',
       'exercise',
       'vegan',
       'volunteering',
-      'team sports',
+      'team_sports',
       'reading',
       'coding',
       'trivia',
-      'movie buff'
+      'movie_buff'
     ];
     console.log(this.state, 'app.js render state');
     // console.log(this.props, 'app.js props');
     return(
       <main className="App">
-        <div className="wrapper">
-          <Header />
+        
+          <Header loggedIn={this.state.loggedIn} />
+          <div className="wrapper">
           {JSON.stringify(this.state.loggedIn) === "{}" ?  <Login getUserInfo={this.getUserInfo}/>: 
           <Switch>
             <Route exact path="/" render={props => <Login getUserInfo={this.getUserInfo}/> } />
 
             <Route path="/myprofile" render={props => {
-              return <MyProfile logout={this.logout} user={this.state.loggedIn} getUsers={this.getUsers} users={this.state.users}/> }} />
+              return <MyProfile logout={this.logout} user={this.state.loggedIn} users={this.state.users}/> }} />
 
             <Route exact path="/users/:userId/badges/:badgeId" render={props => {
               console.log('badgeContainer');
@@ -220,9 +230,11 @@ class App extends Component{
 
             <Route exact path="/newbadge" render={props => <NewBadge addBadge={this.addBadge} badgeTitles={badgeTitles} />} />
 
-            
+            <Route exact path="/newreview" render={props => <NewReview addReview={this.addReview} />} />
 
-            <Route exact path="/profile/:id" render={props => <Profile /> } />
+            <Route exact path="/matches" render={props => <MatchesContainer loggedIn={this.state.loggedIn} users={this.state.users} addReview={this.addReview} />} />
+
+            <Route exact path="/profile/:id" render={props => <Profile likeUser={this.likeUser}/> } />
 
             <Route exact path="/swipe" render={props => <UsersContainer user={this.state.loggedIn} likeUser={this.likeUser}/>} />
 

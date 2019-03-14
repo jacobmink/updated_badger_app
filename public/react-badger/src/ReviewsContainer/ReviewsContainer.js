@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 
-const BadgeContainer = (props)=>{
+const ReviewsContainer = (props)=>{
     // console.log(props, ' props');
     const badge = props.location.state ? props.location.state.badge : '';
     // console.log(badge, ' badge');
@@ -16,15 +16,14 @@ const BadgeContainer = (props)=>{
 
 
     return(
-        <div className="badge-container">
+        <div className="review-container">
             <h1>{user.displayName}'s {badge.title} Badge</h1>
             <Link to={{
-                pathname: `/profile/${user._id}`,
+                pathname: `/myprofile`,
                 state: {
-                    user: user,
                     loggedIn: props.location.state.loggedIn
                 }
-            }}><button>Back to {props.location.state.user.username}'s profile</button></Link> <br/>
+            }}><button>Back to your profile</button></Link> <br/>
             Events
             <ul>
                 {eventList}
@@ -44,5 +43,4 @@ const BadgeContainer = (props)=>{
 }
 
 
-export default withRouter(BadgeContainer);
-
+export default withRouter(ReviewsContainer);

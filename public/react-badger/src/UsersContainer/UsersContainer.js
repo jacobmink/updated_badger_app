@@ -42,7 +42,6 @@ class UsersContainer extends Component{
         }
     }
     
-    // ---------- TODO -------------------
     handleSubmit = (e)=>{
         e.preventDefault();
         const ageRange = this.state.minAge !== '' && this.state.maxAge !== '' ? `minAge=${this.state.minAge}&maxAge=${this.state.maxAge}&` : '';
@@ -64,7 +63,6 @@ class UsersContainer extends Component{
 
         this.getUsers(queries);
     }
-    // -----------------------------------
 
     handleInput = (e)=>{
         this.setState({
@@ -143,7 +141,7 @@ class UsersContainer extends Component{
             'bar_games',
             'boardgames',
             'running',
-            'international travel',
+            'international_travel',
             'calligraphy',
             'exercise',
             'vegan',
@@ -181,6 +179,7 @@ class UsersContainer extends Component{
         const renderUsers = currentUser.map((otherUser, index) => {
             return(
                 <li key={index}>
+                    <img src={otherUser.img} className="profile-pic" />  <br/>
                     <Link to={{
                         pathname:`/profile/${otherUser._id}`,
                         state: {
@@ -193,7 +192,7 @@ class UsersContainer extends Component{
                     Badges: {otherUser.badgeList ? otherUser.badgeList.map((badge)=>{ 
                             return badge.title
                         }): "This user has no badges"} <br/>
-                    <img src={otherUser.img} /> <br/>
+                    
                     <button onClick={this.handlePageClick.bind(null, otherUser._id)} id="likeButton">Like</button> <button onClick={this.handlePageClick.bind(null, otherUser._id)} id="DislikeButton">Not Like</button>
 
                 </li>
@@ -236,9 +235,11 @@ class UsersContainer extends Component{
                     }
                 </section>
                 <section className="swipe-users" >
+                {this.state.users.length === 0 ? 'There are no possible dates for you right now \\\_(*_*)_/ ' : 
                     <ul>
-                       {renderUsers}
-                    </ul>
+                        {renderUsers}
+                     </ul>}
+                    
                 </section> 
             </div>
         )

@@ -28,19 +28,19 @@ class NewBadge extends Component{
                     {img: this.state.img2, description: this.state.description2},
                     {img: this.state.img3, description: this.state.description3}]
         }
-        newBadge.events.forEach((event)=>{
-            if(event.description == ''){
-                this.setState({
-                    message: 'Please fill in all boxes'
-                })
-            }else{
-                this.props.addBadge(newBadge);
-            }
-        })
+        if(newBadge.events.filter((event)=>{
+            return event.description === '';
+        }).length > 0){
+            this.setState({
+                message: 'Please fill in all boxes'
+            })
+        }else{
+            this.props.addBadge(newBadge);
+        }
         
     }
     render(){
-        console.log(this.state);
+        // console.log(this.state);
         const badgeTitleList = this.props.badgeTitles.map((title, i)=>{
             return(
                 <option value={title} key={i}>{title}</option>

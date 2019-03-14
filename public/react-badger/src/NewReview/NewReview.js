@@ -6,9 +6,9 @@ class NewReview extends Component{
         super(props);
         this.state = {
             // reviewer_id: this.props.loggedIn._id,
-            stars: '',
+            stars: '1 star',
             text: '',
-            reviewee_id: this.props.user._id
+            reviewee_id: this.props.location.state.user._id
         }
     }
     handleInput = (e)=>{
@@ -21,7 +21,7 @@ class NewReview extends Component{
         this.props.addReview(this.state);
     }
     render(){
-        console.log(this.state);
+        // console.log(this.state);
         const stars = ['1 star', '2 stars', '3 stars', '4 stars', '5 stars'];
         const starsList = stars.map((star, i)=>{
             return(

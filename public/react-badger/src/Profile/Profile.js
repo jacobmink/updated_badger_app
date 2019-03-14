@@ -95,7 +95,7 @@ class Profile extends Component{
                 {this.state.message}</h2>
                 
 
-                <img src={this.state.user.img} alt={this.state.user.img}/> <br/>
+                <img src={this.state.user.img} alt={this.state.user.img} className="profile-pic" /> <br/>
                 Username: { this.state.user.username } <br/>
                 Age: { this.state.user.age } <br/>
                 Gender: { this.state.user.gender } <br/>

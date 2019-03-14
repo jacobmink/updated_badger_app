@@ -28,19 +28,19 @@ const badgeTitles = [
     'religion',
     'videogame',
     'ski/snowboard',
-    'bar games',
+    'bar_games',
     'boardgames',
     'running',
-    'international travel',
+    'international_travel',
     'calligraphy',
     'exercise',
     'vegan',
     'volunteering',
-    'team sports',
+    'team_sports',
     'reading',
     'coding',
     'trivia',
-    'movie buff'
+    'movie_buff'
 ];
 
 router.route('/')
@@ -232,7 +232,7 @@ router.route('/:id/badges')
     })
 
 router.route('/:id/reviews')
-    // post new badge
+    // post new review
     .post(async (req,res)=>{
         console.log(req.body, ' new review req.body');
         try{
