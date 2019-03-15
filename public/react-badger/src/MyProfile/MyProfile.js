@@ -13,25 +13,7 @@ class MyProfile extends Component{
             message: ''
         }
     }
-    deleteUser = async (id)=>{
-        try{
-            const response = await fetch(`${process.env.REACT_APP_BACKEND}/users/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
-            if(!response.ok){
-                throw Error(response.statusText);
-            }
-            console.log(response.body)
-            const parsed = await response.json();
-            
-            console.log(parsed, ' deleteUser response');
-            this.props.history.push('/')
-        }catch(err){
-            console.log(err);
-            return err;
-        }
-    }
+
     showModal = (e)=>{
         this.setState({
             showModal: !this.state.showModal
@@ -157,7 +139,7 @@ class MyProfile extends Component{
 
                 
                 {this.state.showModal ? <div>
-                    <EditUser editUser={this.editUser} user={this.state.user} deleteUser={this.deleteUser}/> <br/>
+                    <EditUser editUser={this.editUser} user={this.state.user} deleteUser={this.props.deleteUser}/> <br/>
                 </div>  : null}
                  
                  {this.state.showModal ? null : 

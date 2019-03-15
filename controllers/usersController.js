@@ -51,7 +51,7 @@ router.route('/')
             const loggedIn = await User.findOne({'username': req.session.username});
             if(JSON.stringify(req.query) == "{}"){
                 const allUsers = await User.find({ 'username': {$ne: req.session.username} });
-                console.log(allUsers, ' raw allUsers');
+                // console.log(allUsers, ' raw allUsers');
                 res.json({
                     status: 200,
                     data: allUsers
@@ -161,7 +161,7 @@ router.route('/:id')
     // delete account
     .delete(async (req,res)=>{
         console.log(req.params.id, req.session.userId)
-        if(req.session.userId.toString() === req.params.id.toString()){
+        if(req.session.userId && req.session.userId.toString() === req.params.id.toString()){
             console.log('do they match?')
             try{
                 await User.findByIdAndDelete(req.params.id);
@@ -178,6 +178,11 @@ router.route('/:id')
             }catch(err){
                 res.send(err);
             }
+        }else{
+            res.json({
+                status: 200,
+                data: 'Did not delete user!'
+            })
         }
     })
 

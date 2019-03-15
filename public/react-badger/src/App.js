@@ -66,6 +66,32 @@ class App extends Component{
     })
     
   }
+
+  deleteUser = async (id)=>{
+        try{
+            const response = await fetch(`${process.env.REACT_APP_BACKEND}/users/${id}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+            if(!response.ok){
+                throw Error(response.statusText);
+            }
+            const parsed = await response.json();
+            
+            console.log(parsed, ' deleteUser response');
+            this.setState({
+                loggedIn: {},
+                user: {}
+            }, ()=>{
+                this.props.history.push('/');
+            })
+            
+        }catch(err){
+            console.log(err);
+            return err;
+        }
+    }
+
   deleteBadge = async (id)=>{
     try{
       const response = await fetch(`${process.env.REACT_APP_BACKEND}/users/${this.state.user._id}/badges/${id}`, {
@@ -223,7 +249,7 @@ class App extends Component{
             <Route exact path="/" render={props => <Login getUserInfo={this.getUserInfo}/> } />
 
             <Route path="/myprofile" render={props => {
-              return <MyProfile logout={this.logout} user={this.state.loggedIn} users={this.state.users}/> }} />
+              return <MyProfile logout={this.logout} user={this.state.loggedIn} users={this.state.users} deleteUser={this.deleteUser} /> }} />
 
             <Route exact path="/users/:userId/badges/:badgeId" render={props => {
               console.log('badgeContainer');

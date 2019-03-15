@@ -66,6 +66,7 @@ router.post('/registration', async (req,res)=>{
         const createdUser = await User.create(req.body);
         req.session.logged = true;
         req.session.username = req.body.username;
+        req.session.userId = createdUser._id;
         res.json({
             status: 200,
             data: createdUser
