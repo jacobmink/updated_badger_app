@@ -4,7 +4,15 @@ import { Link, withRouter } from 'react-router-dom';
 const Header = (props)=>{
     return(
         <div className="header">
-            <img src="/badger_icon3.png" alt="badger icon" className="badger-icon"/>
+            <div className="logo">
+                <img src="/badger_icon3.png" alt="badger icon" className="badger-icon"/>
+                <div>
+                    <p>Dating</p>
+                    <p>Your</p>
+                    <p>Way</p>
+                </div>
+            </div>
+            
             <ul>
                 <li>  <Link to="/myprofile"><img className="header-icon" src="/profile_icon.jpg" alt="profile icon"/></Link></li>
                 <li>  <Link to="/swipe"><img className="header-icon" src="/heart_icon.png" alt="heart"/></Link></li>

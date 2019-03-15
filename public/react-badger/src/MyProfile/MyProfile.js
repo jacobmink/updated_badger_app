@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { Route, Switch, withRouter, Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import EditUser from '../EditUser/EditUser';
-import NewBadge from '../NewBadge/NewBadge';
-import BadgeContainer from '../BadgeContainer/BadgeContainer';
-import NewReview from '../NewReview/NewReview';
 
 class MyProfile extends Component{
     constructor(props){

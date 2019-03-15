@@ -50,11 +50,7 @@ router.route('/')
             // console.log(req.query, ' req.query');
             const loggedIn = await User.findOne({'username': req.session.username});
             if(JSON.stringify(req.query) == "{}"){
-                const allUsers = await User.find({ 
-                    $and: [
-                        { 'username': {$ne: req.session.username} }
-                    ]
-                });
+                const allUsers = await User.find({ 'username': {$ne: req.session.username} });
                 console.log(allUsers, ' raw allUsers');
                 res.json({
                     status: 200,
@@ -247,9 +243,13 @@ router.route('/:id/reviews')
             reviewee.reviewsReceived.push(newReview);
             await reviewer.save();
             await reviewee.save();
+            const allUsers = await User.find({ 
+                'username': {$ne: req.session.username}
+            });
             res.json({
                 status: 200,
-                data: reviewer
+                reviewer: reviewer,
+                users: allUsers
             });
         }catch(err){
             console.log(err);

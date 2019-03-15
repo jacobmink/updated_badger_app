@@ -130,7 +130,8 @@ class App extends Component{
       const parsed = await response.json();
       console.log(parsed, ' parsed addReview response');
       this.setState({
-        loggedIn: parsed.data
+        loggedIn: parsed.reviewer,
+        users: parsed.users
       }, ()=>{
         this.props.history.push("/myprofile");
       })
@@ -252,9 +253,4 @@ class App extends Component{
 export default withRouter(App);
 
 /* TODO 
-- make review component, only allow review if match exists
 */
-
-// {/* <Route exact path="/newreview" render={props => {
-//             console.log('newreview');
-//             return <NewReview addReview={this.addReview} />}} /> */}

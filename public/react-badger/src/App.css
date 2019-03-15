@@ -44,6 +44,25 @@ main ul{
   width: 10vw;
 }
 
+.logo{
+  display: inline-block;
+}
+
+.logo img{
+  display: inline-block;
+}
+
+.logo div{
+  display: inline-block;
+}
+
+.logo p{
+  display: block;
+  margin: 0;
+  font-size: .8em;
+  font-family: 'Varela Round', sans-serif;
+}
+
 h1{
   color: rgb(97, 38, 165);
   text-shadow: 1px 1px black;
@@ -95,9 +114,14 @@ button.delete-button:hover{
   border-bottom: 1px solid rgba(93, 186, 230, .5);
 }
 
+/* .header > div{
+  display: inline-block;
+} */
+
 .header ul {
+  display: inline-block;
   margin: 0 auto;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .header li{
