@@ -57,7 +57,12 @@ class MatchesContainer extends Component{
                         state: {
                             user: otherUser
                         }}}>
-                    <button>Add a review for {otherUser.displayName}</button>
+                        {this.state.user.reviewsWritten.filter((review)=>{
+                            return(
+                                review.reviewee_id === otherUser._id
+                            )
+                        }).length === 0 ? <button>Add a review for {otherUser.displayName}</button> : null }
+                    
                     </Link>
                     <button onClick={this.showReviews.bind(null, userIndex)}>See reviews for {otherUser.displayName}</button>
                     {this.state.showReviews[userIndex] ? 
