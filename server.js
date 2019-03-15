@@ -50,7 +50,9 @@ app.use('/users/:id/badges', (req,res,next)=>{
     next();
 }, badgesController);
 
-
+app.get('*', (req,res)=>{
+    res.sendFile(path.join(__dirname+'/public/react-bookmatch/build/index.html'));
+});
 
 
 
